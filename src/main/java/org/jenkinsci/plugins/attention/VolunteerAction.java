@@ -21,6 +21,7 @@ import org.jenkinsci.plugins.attention.pbe.DetectedIssue;
 import org.jenkinsci.plugins.attention.response.JavaScriptResponse;
 import org.jenkinsci.plugins.attention.response.PageData;
 import org.jenkinsci.plugins.attention.response.SimpleUser;
+import org.kohsuke.stapler.DataBoundConstructor;
 import org.kohsuke.stapler.bind.JavaScriptMethod;
 import org.kohsuke.stapler.export.Exported;
 import org.kohsuke.stapler.export.ExportedBean;
@@ -37,12 +38,6 @@ public class VolunteerAction implements Action {
     private boolean intermittentProblem = false;
     private String intermittentByName = "";
     private ArrayList<DetectedIssue> issues = new ArrayList<DetectedIssue>();
-
-    public VolunteerAction() {
-        DetectedIssue defaultIssue = new DetectedIssue();
-        defaultIssue.setupTestFailure(DetectedIssue.DEFAULT_CATEGORY, "");
-        issues.add(defaultIssue);
-    }
 
     public boolean showForm() {
         return User.current() != null;
@@ -64,7 +59,12 @@ public class VolunteerAction implements Action {
     }
 
     public void processIssues(List<DetectedIssue> issues) {
+        
+        DetectedIssue defaultIssue = new DetectedIssue();
+        defaultIssue.setupTestFailure(DetectedIssue.DEFAULT_CATEGORY, "");
+        issues.add(defaultIssue);
         this.issues.addAll(issues);
+
         List<VolunteerCollection> unVolunteer = new LinkedList<>();
         for (VolunteerCollection vol : volunteers) {
             boolean errorPersist = true;

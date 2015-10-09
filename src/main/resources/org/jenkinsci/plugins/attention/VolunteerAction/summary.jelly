@@ -15,7 +15,7 @@
 	    </script>
     </j:if>
     
-    <t:summary icon="/plugin/Volunteer/flaghand_large.png">
+    <t:summary icon="/plugin/attention/flaghand_large.png">
     	<j:if test="${!it.showForm()}">	
     		<div class="error" id="loginNeeded">
 				You need to login to volunteer

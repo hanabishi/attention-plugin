@@ -1,15 +1,14 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
 		<groupId>org.jenkins-ci.plugins</groupId>
 		<artifactId>plugin</artifactId>
-		<version>1.609.3</version>
+		<version>1.609.1</version>
 	</parent>
 
 	<groupId>org.jenkins-ci.plugins</groupId>
 	<artifactId>attention</artifactId>
-	<version>1.0-SNAPSHOT</version>
+	<version>1.0</version>
 	<name>Attention</name>
 	<packaging>hpi</packaging>
     <properties>
@@ -20,7 +19,7 @@
     <scm>
         <connection>scm:git:git://github.com/hanabishi/attention-plugin</connection>
         <developerConnection>scm:git:git@github.com:hanabishi/attention-plugin</developerConnection>
-        <tag>HEAD</tag>
+        <tag>attention-1.0</tag>
     </scm>
     <developers>
         <developer>
@@ -31,17 +30,17 @@
         <developer>
             <id>patrikha</id>
             <name>Patrik Harlén</name>
-            <email></email>
+            <email />
         </developer>
         <developer>
             <id>olofek</id>
             <name>Olof Ekedahl</name>
-            <email></email>
+            <email />
         </developer>
         <developer>
             <id>miphip</id>
             <name>Mikael Pahmp</name>
-            <email></email>
+            <email />
         </developer>
     </developers>
     <licenses>

@@ -1,0 +1,31 @@
+<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define" xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:f="/lib/form">
+	<l:layout title="Build Failure Report">
+		<l:header>
+			<script type="text/javascript" src="${it.getPluginURL()}/dropdownhelper.js"></script>
+			<script type="text/javascript" src="${it.getPluginURL()}/buildfailurereport.js"></script>
+			<link href="${it.getPluginURL()}/volunteer.css" rel="stylesheet" type="text/css" />
+			<st:bind var="volProxy" value="${it}"/>
+
+			<script type="text/javascript">
+		    	var pluginRoot = "${it.getPluginURL()}";
+		    	var rootViewName = "${it.getCurrentViewName()}";
+
+		    	document.addEventListener('DOMContentLoaded', function() {
+		    		console.log("LOAD");		    		
+		    		renderPage();
+		        }, false);
+		    </script>
+	    </l:header>
+        <st:include page="sidepanel.jelly" it="${it.getRootView()}" />
+        <l:main-panel>
+            <H1>
+            	<img src="${it.getPluginURL()}/buildfailurereport.png" /> Build Failure Report
+            </H1>
+            <div id="control">
+            	<b>View:</b> <select id="selViews" onchange="filterBuilds()"></select>
+            	<div id="volunteerResult" />
+            </div>
+            <div id="result"></div>
+        </l:main-panel>
+    </l:layout>
+</j:jelly>

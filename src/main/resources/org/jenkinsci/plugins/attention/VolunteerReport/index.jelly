@@ -1,0 +1,35 @@
+<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define" xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:f="/lib/form">
+	<j:set var="volunteerReport" value="${it.getVolunteersReport()}"/>	
+	<l:layout title="Volunteer Report">
+		<l:header>
+			<link href="${it.getPluginURL()}/volunteer.css" rel="stylesheet" type="text/css" />
+			<st:bind var="volProxy" value="${it}"/>
+	    </l:header>
+        <st:include page="sidepanel.jelly" it="${it.getRootView()}" />
+        <l:main-panel>
+            <H1>
+            	<img src="${it.getPluginURL()}/flaghand_large.png" /> Volunteer Report
+            </H1>
+        	<H3>
+    			Builds I've volunteered for
+			</H3>
+        	<j:forEach var="volJob" items="${volunteerReport.myVolunteers}">
+        		<b><img src="${rootURL}/images/16x16/red.png" />${volJob.getProjectName()}</b> <br />
+        		<j:forEach var="vol" items="${volJob.volunteers}">
+        			${vol.getMessage()} <br />
+        			<b>Issue: </b><span class="issueDescription">${vol.getIssue().getErrorHeader()}</span><br />
+        		</j:forEach>
+        	</j:forEach>
+        	<H3>
+        		All volunteers
+    		</H3>
+        	<j:forEach var="volJob" items="${volunteerReport.getAllVolunteers()}">
+    		<b><img src="${rootURL}/images/16x16/red.png" />${volJob.getProjectName()}</b> <br />
+	    		<j:forEach var="vol" items="${volJob.volunteers}">
+	    			${vol.getMessage()} <br />
+	    			<b>Issue: </b><span class="issueDescription">${vol.getIssue().getErrorHeader()}</span><br />
+	    		</j:forEach>
+        	</j:forEach>
+        </l:main-panel>
+    </l:layout>
+</j:jelly>

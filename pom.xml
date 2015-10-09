@@ -1,0 +1,130 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>org.jenkins-ci.plugins</groupId>
+		<artifactId>plugin</artifactId>
+		<version>1.609.3</version>
+	</parent>
+
+	<groupId>org.jenkins-ci.plugins</groupId>
+	<artifactId>attention</artifactId>
+	<version>1.0</version>
+	<name>Attention</name>
+	<packaging>hpi</packaging>
+    <properties>
+        <junit.version>1.9</junit.version>
+    </properties>
+
+    <url>https://wiki.jenkins-ci.org/display/JENKINS/Attention-plugin</url>
+    <scm>
+        <connection>scm:git:git://github.com/hanabishi/attention-plugin</connection>
+        <developerConnection>scm:git:git@github.com:hanabishi/attention-plugin</developerConnection>
+        <tag>HEAD</tag>
+    </scm>
+    <developers>
+        <developer>
+            <id>hanabishi</id>
+            <name>Marcus Jacobsson</name>
+            <email>jenkins@hanabi.se</email>
+        </developer>
+        <developer>
+            <id>patrikha</id>
+            <name>Patrik Harlén</name>
+            <email></email>
+        </developer>
+        <developer>
+            <id>olofek</id>
+            <name>Olof Ekedahl</name>
+            <email></email>
+        </developer>
+        <developer>
+            <id>miphip</id>
+            <name>Mikael Pahmp</name>
+            <email></email>
+        </developer>
+    </developers>
+    <licenses>
+        <license>
+            <name>MIT License</name>
+            <url>http://opensource.org/licenses/MIT</url>
+        </license>
+    </licenses>
+    <dependencies>
+        <dependency>
+            <groupId>org.jenkins-ci.plugins</groupId>
+            <artifactId>junit</artifactId>
+            <version>${junit.version}</version>
+            <optional>false</optional>
+        </dependency>
+    </dependencies>
+    <repositories>
+        <repository>
+            <id>repo.jenkins-ci.org</id>
+            <url>http://repo.jenkins-ci.org/public/</url>
+        </repository>
+    </repositories>
+	<pluginRepositories>
+		<pluginRepository>
+			<id>repo.jenkins-ci.org</id>
+			<url>http://repo.jenkins-ci.org/public/</url>
+		</pluginRepository>
+	</pluginRepositories>
+	<build>
+		<pluginManagement>
+			<plugins>
+				<plugin>
+					<groupId>org.codehaus.mojo</groupId>
+					<artifactId>jslint-maven-plugin</artifactId>
+					<version>1.0.2-SNAPSHOT</version>
+					<executions>
+						<execution>
+							<goals>
+								<goal>jslint</goal>
+								<goal>test-jslint</goal>
+							</goals>
+						</execution>
+					</executions>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-compiler-plugin</artifactId>
+					<configuration>
+						<source>1.7</source>
+						<target>1.7</target>
+						<showDeprecation>true</showDeprecation>
+						<showWarnings>true</showWarnings>
+						<fork>true</fork>
+					</configuration>
+				</plugin>
+				<!--This plugin's configuration is used to store Eclipse m2e settings 
+					only. It has no influence on the Maven build itself. -->
+				<plugin>
+					<groupId>org.eclipse.m2e</groupId>
+					<artifactId>lifecycle-mapping</artifactId>
+					<version>1.0.0</version>
+					<configuration>
+						<disabledTestInjection>true</disabledTestInjection>
+						<archive>
+							<manifest>
+								<classpathPrefix>lib/</classpathPrefix>
+								<classpathLayoutType>repository</classpathLayoutType>
+								<addClasspath>true</addClasspath>
+							</manifest>
+						</archive>
+					</configuration>
+				</plugin>
+			</plugins>
+		</pluginManagement>
+		<plugins>
+			<plugin>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>3.2</version>
+				<configuration>
+					<source>1.7</source>
+					<target>1.7</target>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+</project>

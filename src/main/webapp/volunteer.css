@@ -1,0 +1,109 @@
+.issueDescription{
+	font-style: italic;  
+}
+.volunteerInvestigateHighlight{
+	font-weight: bold;
+	color: blue;
+}
+.volunteerNameInvestigateHighlight{
+	font-weight: bold;
+	color: blue;
+}
+.volunteerFixHighlight{
+    font-weight: bold;
+    color: green;
+}
+.volunteerNameFixHighlight{
+    font-weight: bold;
+    color: green;
+}
+.fixerHighlight{
+	font-weight: bold;
+	color: green;
+}
+.errorHighlight{
+	font-weight: bold;
+	color: red;
+}
+.nobuilds{
+    color: graytext;
+    font-weight: lighter;
+    font-style: italic;
+    font-size: 1.5em;
+}
+.buildHeader {
+	font-weight: bold;
+	color: black;
+	display: block;
+	font-size: 1.2em;
+	-webkit-margin-before: 1.0em;
+	-webkit-margin-after: 0.6em;
+	-webkit-margin-start: 0px;
+	-webkit-margin-end: 0px;
+}
+
+.buildFailureDesc {
+	font-style: italic;
+	display: block;
+	-webkit-margin-before: 0.1em;
+	-webkit-margin-after: 0.6em;
+}
+
+.buildFailureCategory {
+	color: black;
+	font-weight: bold;
+    display: block;
+    -webkit-margin-before: 0.1em;
+    -webkit-margin-after: 0.1em;
+}
+
+.buildFailureMembers {
+	display: block;
+    -webkit-margin-before: 0.1em;
+    -webkit-margin-after: 0.1em;
+
+}
+
+.pluginCategory {
+    font-weight: bold;
+    color: black;
+    display: block;
+    font-size: 1.1em;
+}
+.pluginHeader {
+	font-weight: bold;
+	color: black;
+	display: block;
+	font-size: 1.5em;
+	-webkit-margin-before: 0.83em;
+	-webkit-margin-after: 0.83em;
+	-webkit-margin-start: 0px;
+	-webkit-margin-end: 0px;
+}
+
+.comment {
+	color: graytext;
+	font-weight: lighter;
+	font-style: italic;
+}
+
+.volunteerLine {
+	color: black;
+}
+
+.showMeYourHands {
+	cursor: pointer;
+	cursor: hand;
+}
+
+.fixHasVolunteers {
+	color: orange;
+}
+
+.fixHasNoVolunteers {
+	color: red;
+}
+
+.fixSubmitted {
+	color: green;
+}

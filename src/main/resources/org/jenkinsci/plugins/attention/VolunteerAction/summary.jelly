@@ -1,0 +1,47 @@
+<j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define" xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:f="/lib/form" xmlns:i="jelly:fmt" xmlns:local="local" xmlns:x="jelly:xml">
+    <link href="${it.getPluginURL()}/volunteer.css" rel="stylesheet" type="text/css" />
+    <script type="text/javascript" src="${it.getPluginURL()}/dropdownhelper.js"></script>
+    <script type="text/javascript" src="${it.getPluginURL()}/volunteeraction.js"></script>
+    <j:if test="${it.showForm()}">
+	    <script type="text/javascript">
+	    	var volProxy = <st:bind value="${it}"/>
+	    	var rootURL = "${rootURL}";
+	    	var currentUser = "${it.getCurrentUserID()}";
+	    	var pluginURL = "${it.getPluginURL()}";
+
+	        document.addEventListener('DOMContentLoaded', function() {
+	        	renderPage(${it.isFixSubmitted()}, "${it.getFixSubmittedByName()}", ${it.isIntermittentProblem()}, "${it.getIntermittentByName()}");
+	        }, false);
+	    </script>
+    </j:if>
+    
+    <t:summary icon="/plugin/Volunteer/flaghand_large.png">
+    	<j:if test="${!it.showForm()}">	
+    		<div class="error" id="loginNeeded">
+				You need to login to volunteer
+			</div>
+		</j:if>
+		<j:if test="${it.showForm()}">
+			<div id="volunteerForm">
+				<span class="pluginHeader">Volunteer</span>	
+				<button id="btnInvestigating" onClick="volunteerMeAsInvestigating()"><b>I'll investigate this build</b></button><br/><br/>
+				<b>Intermittent problem: </b><input type="checkbox" id="chkIntermittent" value="false" onchange="updateIntermittentProblem()"/> <span id="intermittentBy" class="fixerHighlight"></span><br/>
+				<b>Fix submitted: </b><input type="checkbox" id="chkFixSubmitted" value="false" onchange="updatefixIsSubmitted()"/> <span id="submittedBy" class="fixerHighlight"></span><br/> 
+				<br />
+				<span class="pluginCategory">Volunteer configuration</span>
+				<b>Volunteer: </b> <select id="selTarget" onchange="targetChange()"><option value="1" selected="selected">Team</option><option value="2">User</option></select>
+				<select id="selID" onchange="loadComments()"></select><b> is </b>
+				<select id="selTypeOfWork" ><option value="1" selected="selected">Investigating</option><option value="2">Fixing</option></select>
+				<br /><b>Issue: </b>
+				<select id="selIssue" onchange="displayIssueDescription()"></select>
+				<div class="issueDescription" id="issueDescription" ></div><br />
+				<b>Comment </b><i>(optional)</i>:<br/>
+				<textarea type="text" rows="6" cols="70" id="txtComment">${it.getMessage()}</textarea><br/>
+				<button id="btnVolunteer" onClick="updateVolunteer()">Submit</button><br /><br />
+				<div id="volunteerResult" />
+			</div>
+		</j:if>
+		<span class="pluginCategory">Volunteers</span>
+        <div id="volunteerList" />
+    </t:summary>
+</j:jelly>

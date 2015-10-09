@@ -81,7 +81,7 @@ public class VolunteerRecorder extends Recorder {
 
         @Override
         public String getDisplayName() {
-            return "Volunteer plugin";
+            return "Attention plugin";
         }
 
         @SuppressWarnings("rawtypes")

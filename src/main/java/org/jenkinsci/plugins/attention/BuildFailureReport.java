@@ -73,7 +73,7 @@ public class BuildFailureReport implements RootAction {
     }
 
     public String getPluginURL() {
-        return Jenkins.getInstance().getRootUrl() + "plugin/Volunteer";
+        return Jenkins.getInstance().getRootUrl() + "plugin/attention";
     }
 
     public String getCurrentViewName() {

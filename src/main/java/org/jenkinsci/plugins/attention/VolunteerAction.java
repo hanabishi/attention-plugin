@@ -151,7 +151,7 @@ public class VolunteerAction implements Action {
 
     @Override
     public String getUrlName() {
-        return "volunteer";
+        return "attention";
     }
 
     public String getUsername() {
@@ -191,7 +191,7 @@ public class VolunteerAction implements Action {
     }
 
     public String getPluginURL() {
-        return Jenkins.getInstance().getRootUrl() + "plugin/Volunteer";
+        return Jenkins.getInstance().getRootUrl() + "plugin/attention";
     }
 
     public void performUnVolunteer(Run<?, ?> localBuild, VolunteerCollection toRemove) throws IOException {

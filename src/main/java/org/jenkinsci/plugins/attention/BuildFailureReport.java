@@ -34,7 +34,7 @@ public class BuildFailureReport implements RootAction {
 
     @Override
     public String getIconFileName() {
-        return "/plugin/Volunteer/buildfailurereport.png";
+        return "/plugin/attention/buildfailurereport.png";
     }
 
     @Override

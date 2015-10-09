@@ -20,7 +20,7 @@ public class VolunteerReport implements RootAction {
 
     @Override
     public String getIconFileName() {
-        return "/plugin/Volunteer/flaghand.png";
+        return "/plugin/attention/flaghand.png";
     }
 
     @Override

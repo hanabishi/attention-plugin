@@ -8,7 +8,7 @@
 
 	<groupId>org.jenkins-ci.plugins</groupId>
 	<artifactId>attention</artifactId>
-	<version>1.1</version>
+	<version>1.2-SNAPSHOT</version>
 	<name>Attention</name>
 	<packaging>hpi</packaging>
     <properties>
@@ -19,7 +19,7 @@
     <scm>
         <connection>scm:git:git://github.com/hanabishi/attention-plugin</connection>
         <developerConnection>scm:git:git@github.com:hanabishi/attention-plugin</developerConnection>
-        <tag>attention-1.1</tag>
+        <tag>HEAD</tag>
     </scm>
     <developers>
         <developer>

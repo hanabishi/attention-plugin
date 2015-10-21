@@ -28,12 +28,20 @@ import org.jenkinsci.plugins.attention.response.Team;
 import org.jenkinsci.plugins.attention.tools.MailClient;
 import org.kohsuke.stapler.QueryParameter;
 import org.kohsuke.stapler.StaplerRequest;
+import org.kohsuke.stapler.export.Exported;
 
 @SuppressWarnings("unchecked")
 @Extension
 public class VolunteerRecorder extends Recorder {
 
+    private List<UserOperation> history;
+
     public VolunteerRecorder() {
+        history = new LinkedList<>();
+    }
+
+    public synchronized void logOperation(UserOperation operation) {
+        this.history.add(operation);
     }
 
     @Override
@@ -59,6 +67,18 @@ public class VolunteerRecorder extends Recorder {
                     .getPreviousBuild().getAction(VolunteerAction.class) : null));
         }
         return true;
+    }
+
+    @Exported(visibility = 2)
+    public List<UserOperation> getHistory() {
+        return history;
+    }
+
+    public void setHistory(List<UserOperation> history) {
+        this.history = history;
+    }
+
+    public static class UserOperation {
     }
 
     @Extension
@@ -136,8 +156,8 @@ public class VolunteerRecorder extends Recorder {
                     }
                 } else {
                     JSONObject devForm = formData.getJSONObject("teamList");
-                    getTeamList().add(
-                            new Team(((JSONObject) devForm).getString("name"), ((JSONObject) devForm)
+                    getTeamList()
+                            .add(new Team(((JSONObject) devForm).getString("name"), ((JSONObject) devForm)
                                     .getString("mail")));
                 }
             }

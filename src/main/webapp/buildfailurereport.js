@@ -2,8 +2,7 @@ var viewCollection = Object();
 var buildList = Object();
 
 function renderPage() {
-	console.log("RENDER");
-	volProxy.getPageData(function(t) {
+	volProxy.getPageData(rootViewName, function(t) {
 		result = t.responseObject();
 		console.log(result);
 		viewCollection = result.views;
@@ -15,13 +14,11 @@ function renderPage() {
 }
 
 function filterBuilds() {
-	blockPage();
 	var selectedView = getDropDownValue("selViews");
 	document.getElementById('result').innerHTML = "<span class='nobuilds'>Loading builds for the view "
 			+ selectedView + "</span>";
 	document.getElementById("selViews").style.display = "none";
 	volProxy.getBuilds(selectedView, function(t) {
-		unblockPage();
 		document.getElementById("selViews").style.display = "";
 		buildList = t.responseObject().buildList;
 		if (t.responseObject().error) {
@@ -33,6 +30,7 @@ function filterBuilds() {
 		renderBuildList();
 	});
 }
+
 
 function renderBuildList() {
 	var bodyVolunteers = "";

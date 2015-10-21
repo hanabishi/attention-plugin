@@ -48,7 +48,7 @@ public class BuildFailureReport implements RootAction {
     }
 
     @JavaScriptMethod
-    public PageData getPageData() {
+    public PageData getPageData(String currentViewName) {
         PageData page = new PageData();
         VolunteerDescriptor descriptor = (VolunteerDescriptor) Jenkins.getInstance().getDescriptor(
                 VolunteerRecorder.class);
@@ -59,9 +59,15 @@ public class BuildFailureReport implements RootAction {
             }
         }
 
-        page.setBuildList(getRedBuildList(getCurrentViewName()));
+        page.setBuildList(getRedBuildList(currentViewName));
 
         return page;
+    }
+
+    @JavaScriptMethod
+    public ReportJavaScriptResponse getBuilds(String branch) {
+        List<ReportObject> redBuildList = getRedBuildList(branch);
+        return new ReportJavaScriptResponse("", false, redBuildList);
     }
 
     public String getVolunteerReport(Run<?, ?> build) {
@@ -72,10 +78,6 @@ public class BuildFailureReport implements RootAction {
         return va.formatVolunteerString();
     }
 
-    public String getPluginURL() {
-        return Jenkins.getInstance().getRootUrl() + "plugin/attention";
-    }
-
     public String getCurrentViewName() {
         return this.getRootView().getDisplayName();
     }
@@ -83,6 +85,10 @@ public class BuildFailureReport implements RootAction {
     public View getRootView() {
         View view = Stapler.getCurrentRequest().findAncestorObject(View.class);
         return view != null ? view : Jenkins.getInstance().getPrimaryView();
+    }
+
+    public String getPluginURL() {
+        return Jenkins.getInstance().getRootUrl() + "plugin/attention";
     }
 
     public String getLastBuildTime(Run<?, ?> lastBuild) {
@@ -128,9 +134,4 @@ public class BuildFailureReport implements RootAction {
         return objects;
     }
 
-    @JavaScriptMethod
-    public ReportJavaScriptResponse getBuilds(String branch) {
-        List<ReportObject> redBuildList = getRedBuildList(branch);
-        return new ReportJavaScriptResponse("", false, redBuildList);
-    }
 }

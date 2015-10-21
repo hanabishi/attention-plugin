@@ -11,7 +11,6 @@
 		    	var rootViewName = "${it.getCurrentViewName()}";
 
 		    	document.addEventListener('DOMContentLoaded', function() {
-		    		console.log("LOAD");		    		
 		    		renderPage();
 		        }, false);
 		    </script>

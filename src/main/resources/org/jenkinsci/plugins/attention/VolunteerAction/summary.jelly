@@ -30,8 +30,7 @@
 				<br />
 				<span class="pluginCategory">Volunteer configuration</span>
 				<b>Volunteer: </b> <select id="selTarget" onchange="targetChange()"><option value="1" selected="selected">Team</option><option value="2">User</option></select>
-				<select id="selID" onchange="loadComments()"></select><b> is </b>
-				<select id="selTypeOfWork" ><option value="1" selected="selected">Investigating</option><option value="2">Fixing</option></select>
+				<select id="selID" onchange="loadComments()"></select>
 				<br /><b>Issue: </b>
 				<select id="selIssue" onchange="displayIssueDescription()"></select>
 				<div class="issueDescription" id="issueDescription" ></div><br />

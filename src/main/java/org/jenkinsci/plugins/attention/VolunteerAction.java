@@ -253,7 +253,7 @@ public class VolunteerAction implements Action {
 
         if (status) {
             performVolunteer(localBuild, new VolunteerCollection(User.current().getId(), false, "I've submitted a fix",
-                    true, new DetectedIssue()), false);
+                    new DetectedIssue()), false);
         }
         ReportObject.removeCache(build.getParent());
     }
@@ -283,7 +283,7 @@ public class VolunteerAction implements Action {
 
         if (status) {
             performVolunteer(localBuild, new VolunteerCollection(User.current().getId(), false,
-                    "I consider this to be an intermittent problem", true, new DetectedIssue()), false);
+                    "I consider this to be an intermittent problem", new DetectedIssue()), false);
         }
         ReportObject.removeCache(build.getParent());
     }
@@ -300,7 +300,7 @@ public class VolunteerAction implements Action {
     }
 
     @JavaScriptMethod
-    public JavaScriptResponse updateVolunteer(String comment, boolean fixing, String volunteerID, boolean isTeam,
+    public JavaScriptResponse updateVolunteer(String comment, String volunteerID, boolean isTeam,
             String issueHeader) {
         try {
             if (volunteerID == "" || volunteerID == null) {
@@ -317,7 +317,7 @@ public class VolunteerAction implements Action {
                     issue = existingIssue;
                 }
             }
-            VolunteerCollection volunteerData = new VolunteerCollection(volunteerID, isTeam, comment, fixing, issue);
+            VolunteerCollection volunteerData = new VolunteerCollection(volunteerID, isTeam, comment, issue);
             if (volunteerData.getId() == "" || volunteerData.getId() == null) {
                 return new JavaScriptResponse(
                         "Failed to create the volunteer data, the current user ID is either null or empty", true,
@@ -326,11 +326,7 @@ public class VolunteerAction implements Action {
             VolunteerDescriptor vd = (VolunteerDescriptor) recorder.getDescriptor();
             performVolunteer(build, volunteerData, true);
 
-            if (fixing) {
-                vd.getClient().notifyNewFixer(volunteerData, User.current(), build);
-            } else {
-                vd.getClient().notifyNewInvestigator(volunteerData, User.current(), build);
-            }
+            vd.getClient().notifyNewInvestigator(volunteerData, User.current(), build);
             ReportObject.removeCache(build.getParent());
             return new JavaScriptResponse(volunteerData.getFullName() + " was volunteered", false, volunteers);
         } catch (Throwable e) {
@@ -350,7 +346,6 @@ public class VolunteerAction implements Action {
             for (VolunteerCollection vc : action.getVolunteers()) {
                 if (vc.getId().equalsIgnoreCase(volunteerData.getId())) {
                     vc.setComment(volunteerData.getComment());
-                    vc.setFixing(volunteerData.isFixing());
                     vc.setIssue(volunteerData.getIssue());
                     found = true;
                     break;

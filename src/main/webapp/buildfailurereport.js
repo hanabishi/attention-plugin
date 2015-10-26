@@ -85,16 +85,10 @@ function renderBuildList() {
 		}
 
 		if (build.volunteers.length > 0) {
-			var fixers = [];
 			var investigators = [];
 
 			for (var vIndex = 0; vIndex < build.volunteers.length; vIndex++) {
-
-				if (build.volunteers[vIndex].fixing) {
-					fixers[fixers.length] = build.volunteers[vIndex].fullName
-				} else {
-					investigators[investigators.length] = build.volunteers[vIndex].fullName
-				}
+				investigators[investigators.length] = build.volunteers[vIndex].fullName
 			}
 
 			if (investigators.length > 0) {
@@ -111,19 +105,6 @@ function renderBuildList() {
 						.join(", ");
 				redBuildDiv.appendChild(buildFailureCategoryInvestigators);
 				redBuildDiv.appendChild(buildFailureMembersInvestigators);
-			}
-			if (fixers.length > 0) {
-				var buildFailureCategoryFixers = document.createElement('span');
-				var buildFailureMembersFixers = document.createElement('span');
-
-				buildFailureCategoryFixers.className = "buildFailureCategory";
-				buildFailureMembersFixers.className = "buildFailureMembers";
-				buildFailureCategoryFixers.innerHTML = "Fixers: ";
-
-				buildFailureMembersFixers.innerHTML = fixers.join(", ");
-				redBuildDiv.appendChild(buildFailureCategoryFixers);
-				redBuildDiv.appendChild(buildFailureMembersFixers);
-
 			}
 		}
 

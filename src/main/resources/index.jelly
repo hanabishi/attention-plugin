@@ -1,3 +1,3 @@
 <div>
-  A plugin to handle red builds in Jenkins. The plugin allows users to volunteer to investigate/fix red builds. It also creates a report with all volunteers and a summary report of all the current red builds in a view. For develops it's possible to extend the attention plugin to create your own build failure detection to populete the issue list.
+  A plugin to handle red builds in Jenkins. The plugin allows users to volunteer to investigate red builds. It also creates a report with all volunteers and a summary report of all the current red builds in a view. For develops it's possible to extend the attention plugin to create your own build failure detection to populete the issue list.
 </div>

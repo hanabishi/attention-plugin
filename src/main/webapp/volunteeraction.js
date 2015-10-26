@@ -68,7 +68,6 @@ function updateIntermittentProblem(){
 
 function updateVolunteer(){
 	var comments = document.getElementById('txtComment').value;
-	var fixing = getDropDownValue("selTypeOfWork") === "2";
 	var volunteerID = getDropDownValue("selID");
 	var isTeam = getDropDownValue("selTarget") === "1";
 	var isseueHeader = getDropDownValue("selIssue");
@@ -77,7 +76,7 @@ function updateVolunteer(){
 	}
 	document.getElementById("btnVolunteer").style.display = "none";
 	document.getElementById('volunteerResult').innerHTML = "processing";
-	volProxy.updateVolunteer(comments, fixing, volunteerID, isTeam, isseueHeader, function(t) {
+	volProxy.updateVolunteer(comments, volunteerID, isTeam, isseueHeader, function(t) {
 		document.getElementById("btnVolunteer").style.display = "";
 		volunteers = t.responseObject().volunteerList;
 		if(t.responseObject().error){
@@ -93,7 +92,7 @@ function updateVolunteer(){
 function volunteerMeAsInvestigating(){
 	document.getElementById("btnInvestigating").style.display = "none";
 	document.getElementById('volunteerResult').innerHTML = "processing";
-	volProxy.updateVolunteer("", false, currentUser, false, -1, function(t) {
+	volProxy.updateVolunteer("", currentUser, false, -1, function(t) {
 		document.getElementById("btnInvestigating").style.display = "";
 		volunteers = t.responseObject().volunteerList;
 		if(t.responseObject().error){
@@ -148,8 +147,6 @@ function loadComments() {
 	for (var volunteerIndex = 0; volunteerIndex < volunteers.length; volunteerIndex++) {
 		if (volunteers[volunteerIndex].id === selectedID) {
 			document.getElementById('txtComment').value = volunteers[volunteerIndex].comment;
-			setSelectedDDLValue("selTypeOfWork",
-					((volunteers[volunteerIndex].fixing) ? "2" : "1"));
 			for (var issueIndex = 0; issueIndex < issues.length; issueIndex++) {
 				if (issues[issueIndex].name === volunteers[volunteerIndex].issue.errorHeader) {
 					setSelectedDDLValue("selIssue", issues[issueIndex].id);

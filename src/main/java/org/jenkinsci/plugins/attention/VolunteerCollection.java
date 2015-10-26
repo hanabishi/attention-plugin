@@ -17,7 +17,6 @@ public class VolunteerCollection {
     private boolean team = false;
     private Date volunteerDate = null;
     private String comment = "";
-    private boolean fixing = false;
     private String volunteerDateString = "";
 
     public static SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd HH:mm");
@@ -26,13 +25,12 @@ public class VolunteerCollection {
     public VolunteerCollection() {
     }
 
-    public VolunteerCollection(String id, boolean team, String comment, boolean fixing, DetectedIssue issue) {
+    public VolunteerCollection(String id, boolean team, String comment, DetectedIssue issue) {
         this.setIssue(issue);
         volunteerDate = new Date();
         this.team = team;
         this.id = id;
         this.comment = comment;
-        this.fixing = fixing;
         this.volunteeredByID = User.current().getId();
         this.setVolunteerDateString(DATE_FORMAT.format(volunteerDate));
     }
@@ -68,37 +66,21 @@ public class VolunteerCollection {
     }
 
     public String getMessage() {
-        if (fixing) {
-            if (getId().equalsIgnoreCase(volunteeredByID)) {
+        if (getId().equalsIgnoreCase(volunteeredByID)) {
+            return String
+                    .format("<span class='volunteerNameInvestigateHighlight'>%s</span> volunteered to <span class='volunteerInvestigateHighlight'>investigate</span> the build",
+                            getFullName(), this.getVolunteerDateString());
+        } else {
+            if (this.isTeam()) {
                 return String
-                        .format("<span class='volunteerNameFixHighlight'>%s</span> volunteered to <span class='volunteerFixHighlight'>fix</span> the build on %s",
-                                getFullName(), this.getVolunteerDateString());
+                        .format("<span class='volunteerNameInvestigateHighlight'>%s</span> were volunteered by %s to <span class='volunteerInvestigateHighlight'>investigate</span> the build on %s",
+                                getFullName(), getVolunteeredByFullName(), this.getVolunteerDateString());
             } else {
                 return String
-                        .format("<span class='volunteerNameFixHighlight'>%s</span> was volunteered by %s to <span class='volunteerFixHighlight'>fix</span> the build on %s",
+                        .format("<span class='volunteerNameInvestigateHighlight'>%s</span> was volunteered by %s to <span class='volunteerInvestigateHighlight'>investigate</span> the build on %s",
                                 getFullName(), getVolunteeredByFullName(), this.getVolunteerDateString());
             }
-        } else {
-            if (getId().equalsIgnoreCase(volunteeredByID)) {
-                return String
-                        .format("<span class='volunteerNameInvestigateHighlight'>%s</span> volunteered to <span class='volunteerInvestigateHighlight'>investigate</span> the build",
-                                getFullName(), this.getVolunteerDateString());
-            } else {
-                if (this.isTeam()) {
-                    return String
-                            .format("<span class='volunteerNameInvestigateHighlight'>%s</span> were volunteered by %s to <span class='volunteerInvestigateHighlight'>investigate</span> the build on %s",
-                                    getFullName(), getVolunteeredByFullName(), this.getVolunteerDateString());
-                } else {
-                    return String
-                            .format("<span class='volunteerNameInvestigateHighlight'>%s</span> was volunteered by %s to <span class='volunteerInvestigateHighlight'>investigate</span> the build on %s",
-                                    getFullName(), getVolunteeredByFullName(), this.getVolunteerDateString());
-                }
-            }
         }
-    }
-
-    public String getIcon() {
-        return (fixing) ? "fixing.png" : "investigating.png";
     }
 
     @Exported(visibility = 3)
@@ -156,15 +138,6 @@ public class VolunteerCollection {
 
     public void setId(String id) {
         this.id = id;
-    }
-
-    @Exported(visibility = 3)
-    public boolean isFixing() {
-        return fixing;
-    }
-
-    public void setFixing(boolean fixing) {
-        this.fixing = fixing;
     }
 
     @Exported(visibility = 3)

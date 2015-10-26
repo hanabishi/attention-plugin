@@ -9,14 +9,6 @@
 	font-weight: bold;
 	color: blue;
 }
-.volunteerFixHighlight{
-    font-weight: bold;
-    color: green;
-}
-.volunteerNameFixHighlight{
-    font-weight: bold;
-    color: green;
-}
 .fixerHighlight{
 	font-weight: bold;
 	color: green;
@@ -94,14 +86,6 @@
 .showMeYourHands {
 	cursor: pointer;
 	cursor: hand;
-}
-
-.fixHasVolunteers {
-	color: orange;
-}
-
-.fixHasNoVolunteers {
-	color: red;
 }
 
 .fixSubmitted {

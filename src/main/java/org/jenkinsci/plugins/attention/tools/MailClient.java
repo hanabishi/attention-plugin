@@ -131,20 +131,6 @@ public class MailClient {
         sendMail(translatToEmail(volunteerer), translatToEmail(current), build, body);
     }
 
-    public void notifyNewFixer(VolunteerCollection volunteerer, User current, Run<?, ?> build) throws AddressException,
-            MessagingException, InvalidParameterException, MalformedURLException, DocumentException {
-        if (current.getId().equalsIgnoreCase(volunteerer.getId())) {
-            return;
-        }
-
-        String body = volunteerer.getFullName() + " was assigned to investigate the failing build <a href=\""
-                + Jenkins.getInstance().getRootUrl() + "/" + build.getUrl() + "\">" + build.getFullDisplayName()
-                + "</a> by " + current.getFullName() + ".<br />";
-        body += "<br /><b>Comments:</b><br /><i>" + volunteerer.getComment().replaceAll(Pattern.quote("\n"), "<br />")
-                + "</i>";
-        sendMail(translatToEmail(volunteerer), translatToEmail(current), build, body);
-    }
-
     public void notifyUnVolunteered(VolunteerCollection volunteerer, User current, Run<?, ?> build)
             throws AddressException, MessagingException, InvalidParameterException, MalformedURLException,
             DocumentException {

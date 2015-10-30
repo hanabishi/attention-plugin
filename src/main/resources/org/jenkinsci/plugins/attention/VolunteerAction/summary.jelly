@@ -29,7 +29,7 @@
 				<b>Fix submitted: </b><input type="checkbox" id="chkFixSubmitted" value="false" onchange="updatefixIsSubmitted()"/> <span id="submittedBy" class="fixerHighlight"></span><br/> 
 				<br />
 				<span class="pluginCategory">Volunteer configuration</span>
-				<b>Volunteer: </b> <select id="selTarget" onchange="targetChange()"><option value="1" selected="selected">Team</option><option value="2">User</option></select>
+				<b>Volunteer: </b> <select id="selTarget" onchange="targetChange()"><option value="1">Team</option><option value="2" selected="selected">User</option></select>
 				<select id="selID" onchange="loadComments()"></select>
 				<br /><b>Issue: </b>
 				<select id="selIssue" onchange="displayIssueDescription()"></select>

@@ -18,7 +18,8 @@ function renderPage(fixSubmitted, fixSubmittedBy, isIntermittent, taggedIntermit
 		issues = response.issues;
 
 		populateTeamsList(teams);
-		populateIssuesList(issues)
+		populateIssuesList(issues);
+		targetChange();
 		updateVolunteersList(volunteers, document.getElementById('volunteerList'), pluginURL);
 		loadComments();
 	});

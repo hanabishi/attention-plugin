@@ -2,6 +2,9 @@ var viewCollection = Object();
 var buildList = Object();
 
 function renderPage() {
+	document.getElementById('volunteerResult').innerHTML = "<span class='nobuilds'>Loading builds for view "
+			+ selectedView + "</span>";
+
 	volProxy.getPageData(rootViewName, function(t) {
 		result = t.responseObject();
 		console.log(result);
@@ -30,7 +33,6 @@ function filterBuilds() {
 		renderBuildList();
 	});
 }
-
 
 function renderBuildList() {
 	var bodyVolunteers = "";

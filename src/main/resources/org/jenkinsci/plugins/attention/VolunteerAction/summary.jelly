@@ -1,13 +1,13 @@
 <j:jelly xmlns:j="jelly:core" xmlns:st="jelly:stapler" xmlns:d="jelly:define" xmlns:l="/lib/layout" xmlns:t="/lib/hudson" xmlns:f="/lib/form" xmlns:i="jelly:fmt" xmlns:local="local" xmlns:x="jelly:xml">
-    <link href="${it.getPluginURL()}/volunteer.css" rel="stylesheet" type="text/css" />
-    <script type="text/javascript" src="${it.getPluginURL()}/dropdownhelper.js"></script>
-    <script type="text/javascript" src="${it.getPluginURL()}/volunteeraction.js"></script>
+    <link href="${rootURL}/${it.URL}/volunteer.css" rel="stylesheet" type="text/css" />
+    <script type="text/javascript" src="${rootURL}/${it.URL}/dropdownhelper.js"></script>
+    <script type="text/javascript" src="${rootURL}/${it.URL}/volunteeraction.js"></script>
     <j:if test="${it.showForm()}">
 	    <script type="text/javascript">
 	    	var volProxy = <st:bind value="${it}"/>
 	    	var rootURL = "${rootURL}";
 	    	var currentUser = "${it.getCurrentUserID()}";
-	    	var pluginURL = "${it.getPluginURL()}";
+	    	var pluginURL = "${rootURL}/${it.URL}";
 
 	        document.addEventListener('DOMContentLoaded', function() {
 	        	renderPage(${it.isFixSubmitted()}, "${it.getFixSubmittedByName()}", ${it.isIntermittentProblem()}, "${it.getIntermittentByName()}");

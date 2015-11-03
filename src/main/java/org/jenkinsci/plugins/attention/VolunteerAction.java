@@ -21,7 +21,6 @@ import org.jenkinsci.plugins.attention.pbe.DetectedIssue;
 import org.jenkinsci.plugins.attention.response.JavaScriptResponse;
 import org.jenkinsci.plugins.attention.response.PageData;
 import org.jenkinsci.plugins.attention.response.SimpleUser;
-import org.kohsuke.stapler.DataBoundConstructor;
 import org.kohsuke.stapler.bind.JavaScriptMethod;
 import org.kohsuke.stapler.export.Exported;
 import org.kohsuke.stapler.export.ExportedBean;
@@ -29,15 +28,35 @@ import org.kohsuke.stapler.export.ExportedBean;
 @ExportedBean
 public class VolunteerAction implements Action {
 
-    private LinkedList<VolunteerCollection> volunteers = new LinkedList<VolunteerCollection>();
-
-    private Run<?, ?> build = null;
-    private VolunteerRecorder recorder = null;
+    private final Run<?, ?> build;
+    private LinkedList<VolunteerCollection> volunteers = new LinkedList<>();
     private boolean fixSubmitted = false;
     private String fixSubmittedByName = "";
     private boolean intermittentProblem = false;
     private String intermittentByName = "";
-    private ArrayList<DetectedIssue> issues = new ArrayList<DetectedIssue>();
+    private ArrayList<DetectedIssue> issues = new ArrayList<>();
+
+    private transient VolunteerHistory history;
+
+    public VolunteerAction(Run<?, ?> build, VolunteerAction prevVolunteerAction) {
+        this.build = build;
+        if (prevVolunteerAction != null) {
+            for (VolunteerCollection col : prevVolunteerAction.getVolunteers()) {
+                volunteers.add(col.copy());
+            }
+            this.fixSubmitted = prevVolunteerAction.fixSubmitted;
+            this.fixSubmittedByName = prevVolunteerAction.fixSubmittedByName;
+            this.intermittentProblem = prevVolunteerAction.intermittentProblem;
+            this.intermittentByName = prevVolunteerAction.intermittentByName;
+        }
+    }
+
+    private synchronized VolunteerHistory getHistory() {
+        if (history == null) {
+            history = build.getParent().getAction(VolunteerProjectAction.class).getHistory();
+        }
+        return history;
+    }
 
     public boolean showForm() {
         return User.current() != null;
@@ -47,7 +66,7 @@ public class VolunteerAction implements Action {
     public PageData getPageData() {
         PageData page = new PageData();
         page.setIssues(issues);
-        page.setTeams(((VolunteerDescriptor) recorder.getDescriptor()).getTeamList());
+        page.setTeams(getDescriptor().getTeamList());
         page.setVolunteers(volunteers);
         for (User user : User.getAll()) {
             if (!user.getDisplayName().contains("@")) {
@@ -101,21 +120,6 @@ public class VolunteerAction implements Action {
     public String getCurrentUserID() {
         User current = User.current();
         return (current != null) ? current.getId() : "guest";
-    }
-
-    public VolunteerAction(VolunteerRecorder recorder, Run<?, ?> build, VolunteerAction prevVolunteerAction) {
-        this.build = build;
-        this.recorder = recorder;
-        if (prevVolunteerAction != null) {
-            for (VolunteerCollection col : prevVolunteerAction.getVolunteers()) {
-                volunteers.add(col.copy());
-            }
-            this.fixSubmitted = prevVolunteerAction.fixSubmitted;
-            this.fixSubmittedByName = prevVolunteerAction.fixSubmittedByName;
-            this.intermittentProblem = prevVolunteerAction.intermittentProblem;
-            this.intermittentByName = prevVolunteerAction.intermittentByName;
-        }
-
     }
 
     // This is used by the volunteer column
@@ -190,8 +194,8 @@ public class VolunteerAction implements Action {
         return Jenkins.getInstance().getRootUrl() + "images/16x16";
     }
 
-    public String getPluginURL() {
-        return Jenkins.getInstance().getRootUrl() + "plugin/attention";
+    public String getURL() {
+        return "plugin/attention";
     }
 
     public void performUnVolunteer(Run<?, ?> localBuild, VolunteerCollection toRemove) throws IOException {
@@ -216,10 +220,6 @@ public class VolunteerAction implements Action {
     @JavaScriptMethod
     public JavaScriptResponse unVolunteer(String id) {
         try {
-            if (recorder == null) {
-                return new JavaScriptResponse("The recorder is null, please notify your Jenkins administrator", true,
-                        volunteers);
-            }
             VolunteerCollection toRemove = null;
             for (VolunteerCollection vc : volunteers) {
                 if (vc.getId().equalsIgnoreCase(id)) {
@@ -227,10 +227,15 @@ public class VolunteerAction implements Action {
                     break;
                 }
             }
+            if (toRemove == null) {
+                return new JavaScriptResponse("No such volunteer: " + id + "<br />", true, volunteers);
+            }
 
-            VolunteerDescriptor vd = (VolunteerDescriptor) recorder.getDescriptor();
             performUnVolunteer(build, toRemove);
-            vd.getClient().notifyUnVolunteered(toRemove, User.current(), build);
+            getHistory().add(UserOperation.unVolunteerOperation(
+                    build.getNumber(), User.current().getId(),
+                    toRemove.getId(), toRemove.isTeam()));
+            getDescriptor().getMailClient().notifyUnVolunteered(toRemove, User.current(), build);
             ReportObject.removeCache(build.getParent());
             return new JavaScriptResponse(id + " was removed", false, volunteers);
         } catch (Throwable e) {
@@ -262,6 +267,15 @@ public class VolunteerAction implements Action {
     public JavaScriptResponse flagFixSubmitted(boolean newStatus) {
         try {
             updateFixOnTheWayStatus(build, newStatus);
+            if (newStatus) {
+                getHistory().add(
+                        UserOperation.fixSubmittedOperation(
+                                build.getNumber(), User.current().getId()));
+            } else {
+                getHistory().add(
+                        UserOperation.noFixSubmittedOperation(
+                                build.getNumber(), User.current().getId()));
+            }
             return new JavaScriptResponse(getFixSubmittedByName(), false, volunteers);
         } catch (Throwable e) {
             e.printStackTrace();
@@ -292,6 +306,15 @@ public class VolunteerAction implements Action {
     public JavaScriptResponse flagIntermittent(boolean newStatus) {
         try {
             updateIntermittentStatus(build, newStatus);
+            if (newStatus) {
+                getHistory().add(
+                        UserOperation.intermittentOperation(
+                                build.getNumber(), User.current().getId()));
+            } else {
+                getHistory().add(
+                        UserOperation.notIntermittentOperation(
+                                build.getNumber(), User.current().getId()));
+            }
             return new JavaScriptResponse(getIntermittentByName(), false, volunteers);
         } catch (Throwable e) {
             e.printStackTrace();
@@ -303,14 +326,10 @@ public class VolunteerAction implements Action {
     public JavaScriptResponse updateVolunteer(String comment, String volunteerID, boolean isTeam,
             String issueHeader) {
         try {
-            if (volunteerID == "" || volunteerID == null) {
+            if (volunteerID == null || volunteerID.equals("")) {
                 return new JavaScriptResponse("You need to select a user/team to volunteer", true, volunteers);
             }
 
-            if (recorder == null) {
-                return new JavaScriptResponse("The recorder is null, please notify your Jenkins administrator", true,
-                        volunteers);
-            }
             DetectedIssue issue = new DetectedIssue();
             for (DetectedIssue existingIssue : issues) {
                 if (existingIssue.getErrorHeader().equalsIgnoreCase(issueHeader)) {
@@ -318,15 +337,18 @@ public class VolunteerAction implements Action {
                 }
             }
             VolunteerCollection volunteerData = new VolunteerCollection(volunteerID, isTeam, comment, issue);
-            if (volunteerData.getId() == "" || volunteerData.getId() == null) {
+            if (volunteerData.getVolunteeredByID() == null || volunteerData.getVolunteeredByID().equals("")) {
                 return new JavaScriptResponse(
                         "Failed to create the volunteer data, the current user ID is either null or empty", true,
                         volunteers);
             }
-            VolunteerDescriptor vd = (VolunteerDescriptor) recorder.getDescriptor();
             performVolunteer(build, volunteerData, true);
-
-            vd.getClient().notifyNewInvestigator(volunteerData, User.current(), build);
+            getHistory().add(
+                    UserOperation.volunteerOperation(
+                            build.getNumber(), User.current().getId(),
+                            volunteerData.getId(), volunteerData.isTeam(),
+                            volunteerData.getComment()));
+            getDescriptor().getMailClient().notifyNewInvestigator(volunteerData, User.current(), build);
             ReportObject.removeCache(build.getParent());
             return new JavaScriptResponse(volunteerData.getFullName() + " was volunteered", false, volunteers);
         } catch (Throwable e) {
@@ -371,7 +393,8 @@ public class VolunteerAction implements Action {
         PrintWriter pw = null;
         try {
             sw = new StringWriter();
-            e.printStackTrace(new PrintWriter(sw));
+            pw = new PrintWriter(sw);
+            e.printStackTrace(pw);
             return sw.toString();
         } finally {
             IOUtils.closeQuietly(sw);
@@ -423,4 +446,7 @@ public class VolunteerAction implements Action {
         this.issues = issues;
     }
 
+    private VolunteerDescriptor getDescriptor() {
+        return Jenkins.getInstance().getDescriptorByType(VolunteerDescriptor.class);
+    }
 }

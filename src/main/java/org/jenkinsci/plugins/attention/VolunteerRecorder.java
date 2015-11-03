@@ -2,11 +2,7 @@ package org.jenkinsci.plugins.attention;
 
 import hudson.Extension;
 import hudson.Launcher;
-import hudson.model.Action;
-import hudson.model.BuildListener;
-import hudson.model.Result;
-import hudson.model.AbstractBuild;
-import hudson.model.AbstractProject;
+import hudson.model.*;
 import hudson.tasks.BuildStepDescriptor;
 import hudson.tasks.BuildStepMonitor;
 import hudson.tasks.Publisher;
@@ -14,10 +10,7 @@ import hudson.tasks.Recorder;
 import hudson.util.FormValidation;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 
 import javax.servlet.ServletException;
 
@@ -28,20 +21,17 @@ import org.jenkinsci.plugins.attention.response.Team;
 import org.jenkinsci.plugins.attention.tools.MailClient;
 import org.kohsuke.stapler.QueryParameter;
 import org.kohsuke.stapler.StaplerRequest;
-import org.kohsuke.stapler.export.Exported;
 
 @SuppressWarnings("unchecked")
 @Extension
 public class VolunteerRecorder extends Recorder {
 
-    private List<UserOperation> history;
+    private transient VolunteerHistory history;
 
     public VolunteerRecorder() {
-        history = new LinkedList<>();
-    }
-
-    public synchronized void logOperation(UserOperation operation) {
-        this.history.add(operation);
+        // can't initialize history here since we don't know which job (project)
+        // this recorder belongs to yet.
+        history = null;
     }
 
     @Override
@@ -51,40 +41,39 @@ public class VolunteerRecorder extends Recorder {
 
     @Override
     public Collection<? extends Action> getProjectActions(AbstractProject<?, ?> project) {
-        ArrayList<Action> actions = new ArrayList<Action>();
-        if (project.getLastBuild() != null) {
-            actions.add(new VolunteerAction(this, project.getLastBuild(), project.getLastBuild().getAction(
-                    VolunteerAction.class)));
-        }
-        return actions;
+        return Collections.singletonList(
+                new VolunteerProjectAction(getHistory(project)));
     }
 
     @Override
     public final boolean perform(final AbstractBuild<?, ?> build, final Launcher launcher, final BuildListener listener)
             throws InterruptedException, IOException {
         if (build.getResult().isWorseThan(Result.SUCCESS)) {
-            build.addAction(new VolunteerAction(this, build, build.getPreviousBuild() != null ? build
-                    .getPreviousBuild().getAction(VolunteerAction.class) : null));
+            getHistory(build.getParent()).add(
+                    UserOperation.redBuildOperation(build.getNumber()));
+            VolunteerAction previousAction =
+                    build.getPreviousBuild() != null
+                            ? build.getPreviousBuild().getAction(VolunteerAction.class)
+                            : null;
+            build.addAction(new VolunteerAction(build, previousAction));
+        } else {
+            getHistory(build.getParent()).add(
+                    UserOperation.greenBuildOperation(build.getNumber()));
         }
         return true;
     }
 
-    @Exported(visibility = 2)
-    public List<UserOperation> getHistory() {
+    private synchronized VolunteerHistory getHistory(Job<?, ?> job) {
+        if (history == null) {
+            history = new VolunteerHistory(job.getRootDir());
+        }
         return history;
-    }
-
-    public void setHistory(List<UserOperation> history) {
-        this.history = history;
-    }
-
-    public static class UserOperation {
     }
 
     @Extension
     public static final class VolunteerDescriptor extends BuildStepDescriptor<Publisher> {
 
-        private List<Team> teamList = new LinkedList<Team>();
+        private List<Team> teamList = new LinkedList<>();
         private String emailFrom;
         private String emailReplyTo;
         private String emailServer;
@@ -92,11 +81,15 @@ public class VolunteerRecorder extends Recorder {
         private String emailPassword;
         private boolean showAllView = true;
 
-        private MailClient client;
+        private transient MailClient mailClient;
 
         public VolunteerDescriptor() {
             super(VolunteerRecorder.class);
             load();
+
+            mailClient = new MailClient(
+                    emailServer, emailUsername, emailPassword, emailReplyTo, emailFrom,
+                    this.getTeamList());
         }
 
         @Override
@@ -162,10 +155,11 @@ public class VolunteerRecorder extends Recorder {
                 }
             }
 
-            client = new MailClient(emailServer, emailUsername, emailPassword, emailReplyTo, emailFrom,
-                    this.getTeamList());
-
             save();
+
+            mailClient = new MailClient(
+                    emailServer, emailUsername, emailPassword, emailReplyTo, emailFrom,
+                    this.getTeamList());
 
             return super.configure(req, formData);
         }
@@ -210,12 +204,12 @@ public class VolunteerRecorder extends Recorder {
             this.emailPassword = emailPassword;
         }
 
-        public MailClient getClient() {
-            return client;
+        public MailClient getMailClient() {
+            return mailClient;
         }
 
-        public void setClient(MailClient client) {
-            this.client = client;
+        public void setMailClient(MailClient client) {
+            this.mailClient = client;
         }
 
         public List<Team> getTeamList() {

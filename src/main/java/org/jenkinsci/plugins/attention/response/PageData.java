@@ -13,7 +13,7 @@ import org.jenkinsci.plugins.attention.pbe.DetectedIssue;
 public class PageData {
     private LinkedList<SimpleUser> users = new LinkedList<SimpleUser>();
     private List<Team> teams;
-    private LinkedList<VolunteerCollection> volunteers;
+    private List<VolunteerCollection> volunteers;
     private ArrayList<DetectedIssue> issues;
 
     private List<String> views = new LinkedList<>();
@@ -35,11 +35,11 @@ public class PageData {
         this.teams = teams;
     }
 
-    public LinkedList<VolunteerCollection> getVolunteers() {
+    public List<VolunteerCollection> getVolunteers() {
         return volunteers;
     }
 
-    public void setVolunteers(LinkedList<VolunteerCollection> volunteers) {
+    public void setVolunteers(List<VolunteerCollection> volunteers) {
         this.volunteers = volunteers;
     }
 

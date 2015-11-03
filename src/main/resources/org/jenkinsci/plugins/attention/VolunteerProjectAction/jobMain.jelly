@@ -1,0 +1,46 @@
+<j:jelly xmlns:j="jelly:core" xmlns:t="/lib/hudson">
+    <link href="${rootURL}/${it.URL}/volunteer.css" rel="stylesheet" type="text/css" />
+    <script type="text/javascript" src="${rootURL}/${it.URL}/volunteerhistory.js"></script>
+	<script type="text/javascript">
+		document.addEventListener(
+				'DOMContentLoaded',
+				function() { renderPage(); },
+				false);
+	</script>
+
+    <table style="margin-top: 1em; margin-left:1em;" width="100%">
+		<tr>
+			<td>
+				<img src="${rootURL}/${it.URL}/flaghand_large.png"/>
+			</td>
+			<td style="width:100%; vertical-align:middle">
+				<div class="pluginHeader" style="display:inline;">Volunteer History</div>
+			</td>
+		</tr>
+		<tr>
+			<td/>
+			<td>
+				<table>
+					<thead>
+						<tr>
+							<th align="left" width="130">Date</th>
+							<th align="left" width="50">Build</th>
+							<th align="left" width="200">User operation</th>
+							<th align="left">Comment</th>
+						</tr>
+					</thead>
+					<tbody>
+					<j:forEach var="op" items="${it.history.lastUserOperations}">
+						<tr>
+							<td>${op.displayDate}</td>
+							<td>#${op.buildNumber}</td>
+							<td>${op.displayOperation}</td>
+							<td style="font-style: italic">${op.comment}</td>
+						</tr>
+					</j:forEach>
+					</tbody>
+				</table>
+			</td>
+		</tr>
+	</table>
+</j:jelly>

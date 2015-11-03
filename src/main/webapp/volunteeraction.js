@@ -11,7 +11,6 @@ function renderPage(fixSubmitted, fixSubmittedBy, isIntermittent, taggedIntermit
 
 	volProxy.getPageData(function(t) {
 		response = t.responseObject();
-		console.log(response);
 		users = response.users;
 		teams = response.teams;
 		volunteers = response.volunteers;

@@ -1,4 +1,5 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
 		<groupId>org.jenkins-ci.plugins</groupId>
@@ -11,58 +12,65 @@
 	<version>1.3-SNAPSHOT</version>
 	<name>Attention</name>
 	<packaging>hpi</packaging>
-    <properties>
-        <junit.version>1.9</junit.version>
-    </properties>
+	<properties>
+		<junit.version>1.9</junit.version>
+		<mailer.version>1.16</mailer.version>
+	</properties>
 
-    <url>https://wiki.jenkins-ci.org/display/JENKINS/Attention-plugin</url>
-    <scm>
-        <connection>scm:git:git://github.com/hanabishi/attention-plugin</connection>
-        <developerConnection>scm:git:git@github.com:hanabishi/attention-plugin</developerConnection>
-        <tag>HEAD</tag>
-    </scm>
-    <developers>
-        <developer>
-            <id>hanabishi</id>
-            <name>Marcus Jacobsson</name>
-            <email>jenkins@hanabi.se</email>
-        </developer>
-        <developer>
-            <id>patrikha</id>
-            <name>Patrik Harlén</name>
-            <email />
-        </developer>
-        <developer>
-            <id>olofek</id>
-            <name>Olof Ekedahl</name>
-            <email />
-        </developer>
-        <developer>
-            <id>miphip</id>
-            <name>Mikael Pahmp</name>
-            <email />
-        </developer>
-    </developers>
-    <licenses>
-        <license>
-            <name>MIT License</name>
-            <url>http://opensource.org/licenses/MIT</url>
-        </license>
-    </licenses>
-    <dependencies>
-        <dependency>
-            <groupId>org.jenkins-ci.plugins</groupId>
-            <artifactId>junit</artifactId>
-            <version>${junit.version}</version>
-            <optional>true</optional>
-        </dependency>
-    </dependencies>
-    <repositories>
-        <repository>
-            <id>repo.jenkins-ci.org</id>
-            <url>http://repo.jenkins-ci.org/public/</url>
-        </repository>
-    </repositories>
+	<url>https://wiki.jenkins-ci.org/display/JENKINS/Attention-plugin</url>
+	<scm>
+		<connection>scm:git:git://github.com/hanabishi/attention-plugin</connection>
+		<developerConnection>scm:git:git@github.com:hanabishi/attention-plugin</developerConnection>
+		<tag>HEAD</tag>
+	</scm>
+	<developers>
+		<developer>
+			<id>hanabishi</id>
+			<name>Marcus Jacobsson</name>
+			<email>jenkins@hanabi.se</email>
+		</developer>
+		<developer>
+			<id>patrikha</id>
+			<name>Patrik Harlén</name>
+			<email />
+		</developer>
+		<developer>
+			<id>olofek</id>
+			<name>Olof Ekedahl</name>
+			<email />
+		</developer>
+		<developer>
+			<id>miphip</id>
+			<name>Mikael Pahmp</name>
+			<email />
+		</developer>
+	</developers>
+	<licenses>
+		<license>
+			<name>MIT License</name>
+			<url>http://opensource.org/licenses/MIT</url>
+		</license>
+	</licenses>
+	<dependencies>
+		<dependency>
+			<groupId>org.jenkins-ci.plugins</groupId>
+			<artifactId>junit</artifactId>
+			<version>${junit.version}</version>
+			<optional>true</optional>
+		</dependency>
+		<dependency>
+			<groupId>org.jenkins-ci.plugins</groupId>
+			<artifactId>mailer</artifactId>
+			<version>${mailer.version}</version>
+			<optional>true</optional>
+		</dependency>
+	</dependencies>
+	<repositories>
+		<repository>
+			<id>repo.jenkins-ci.org</id>
+			<url>http://repo.jenkins-ci.org/public/</url>
+		</repository>
+	</repositories>
 	<pluginRepositories>
 		<pluginRepository>
 			<id>repo.jenkins-ci.org</id>

@@ -1,6 +1,7 @@
 package org.jenkinsci.plugins.attention.tools;
 
 import hudson.model.Run;
+import hudson.model.TaskListener;
 import hudson.model.User;
 
 import java.net.MalformedURLException;
@@ -36,8 +37,7 @@ public class MailClient {
     private String from;
     private List<Team> teamList;
 
-    public MailClient(String host, String user, String password, String replyTo, String from,
-            List<Team> teamList) {
+    public MailClient(String host, String user, String password, String replyTo, String from, List<Team> teamList) {
         this.host = host;
         this.user = user;
         this.password = password;
@@ -79,26 +79,17 @@ public class MailClient {
         Transport.send(message);
     }
 
-    public String translatToEmail(User user) throws MalformedURLException, DocumentException {
-        String email = "";
-        URL apiURL = null;
-        if (Jenkins.getInstance().getRootUrl() != null) {
-            apiURL = new URL(Jenkins.getInstance().getRootUrl() + "/securityRealm/user/" + user.getId() + "/api/xml");
-        } else {
-            apiURL = new URL("/securityRealm/user/" + user.getId() + "/api/xml");
-        }
-
-        @SuppressWarnings("unchecked")
-        List<Element> elements = new SAXReader().read(apiURL).getRootElement().elements("property");
-        for (Element elem : elements) {
-            Element add = elem.element("address");
-            if (add != null) {
-                email = add.getText();
-                break;
+    public static String translatToEmail(User user) {
+        if (user != null) {
+            hudson.tasks.Mailer.UserProperty property = user.getProperty(hudson.tasks.Mailer.UserProperty.class);
+            if (property != null) {
+                String email = property.getAddress();
+                if (email != null) {
+                    return email;
+                }
             }
         }
-
-        return email;
+        return "";
     }
 
     public String translatToEmail(VolunteerCollection volunteerer) throws InvalidParameterException,

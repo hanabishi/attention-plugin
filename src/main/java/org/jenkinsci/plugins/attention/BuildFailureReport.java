@@ -34,17 +34,17 @@ public class BuildFailureReport implements RootAction {
 
     @Override
     public String getIconFileName() {
-        return "/plugin/attention/buildfailurereport.png";
+        return null;//"/plugin/attention/buildfailurereport.png";
     }
 
     @Override
     public String getDisplayName() {
-        return "Build Failure Report";
+        return null;//"Build Failure Report";
     }
 
     @Override
     public String getUrlName() {
-        return "buildfailurereport";
+        return null;//"buildfailurereport";
     }
 
     @JavaScriptMethod

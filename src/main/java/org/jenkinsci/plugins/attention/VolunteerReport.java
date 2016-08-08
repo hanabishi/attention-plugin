@@ -20,17 +20,17 @@ public class VolunteerReport implements RootAction {
 
     @Override
     public String getIconFileName() {
-        return "/plugin/attention/flaghand.png";
+        return null;//"/plugin/attention/flaghand.png";
     }
 
     @Override
     public String getDisplayName() {
-        return "Volunteer Report";
+        return null;//"Volunteer Report";
     }
 
     @Override
     public String getUrlName() {
-        return "volunteerreport";
+        return null;//"volunteerreport";
     }
 
     public String getPluginURL() {
@@ -121,7 +121,7 @@ public class VolunteerReport implements RootAction {
                 }
             }
         }
-        
+
         return result;
     }
 
